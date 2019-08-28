@@ -19,8 +19,10 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
 
     //Shot
-    public Transform gunHolderPivot; 
-    public float shotPower = 100f; 
+    public Transform gunHolderPivot;
+    public float shotPower = 100f;
+    public int shotLeft = 1;
+    public int shotMax = 1;
 
     private Rigidbody2D rb;
 
@@ -50,16 +52,16 @@ public class PlayerController : MonoBehaviour
         gunHolderPivot.right = transform.localScale.x > 0 ? direction : -direction;
 
         //Shot
-        if (!isGrounded && Input.GetButtonDown("Fire1")) {
-            Debug.Log("fire!!");
-            Debug.DrawRay(transform.position, gunHolderPivot.right);
+        if (!isGrounded && Input.GetButtonDown("Fire1") && shotLeft > 0) {
             rb.velocity = -direction * shotPower;
+            shotLeft--;
         }
 
         //Jump
         isGrounded = Physics2D.OverlapCircle(feetPos.position, feetCheckRadius, groundMask);
         if (isGrounded && Input.GetButtonDown("Jump")) {
             isJumping = true;
+            shotLeft = shotMax;
             jumpTimeLeft = jumpTime;
             rb.AddForce(Vector3.up * jumpForce * 15);
         }
