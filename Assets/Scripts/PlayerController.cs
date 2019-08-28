@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     //Movement
     private float moveInput = 0f;
     public float speed = 2f;
+    public float airControl = 40f;
 
     //Jump
     public float jumpForce = 10f;
@@ -36,8 +37,9 @@ public class PlayerController : MonoBehaviour
         moveInput = Input.GetAxis("Horizontal");
         if (isGrounded) {
             rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
-        } else {
-            rb.AddForce(Vector2.right * moveInput * speed);
+        } // We can move a bit in the air, but we can accelerate only if velocity is less than ground max speed
+        else if ((moveInput > 0 && rb.velocity.x < speed) || (moveInput < 0 && rb.velocity.x > -speed)) {
+            rb.AddForce(Vector2.right * moveInput * airControl);
         }
     }
 
