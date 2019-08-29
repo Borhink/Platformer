@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
 
     //Shot
     public Transform gunHolderPivot;
+    public Transform gunMuzzle;
     public float shotPower = 100f;
     public int shotLeft = 1;
     public int shotMax = 1;
@@ -45,22 +46,26 @@ public class PlayerController : MonoBehaviour
 
     void Update() {
 
+        isGrounded = Physics2D.OverlapCircle(feetPos.position, feetCheckRadius, groundMask);
+
         //Looking Direction
         Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if ((mouseWorldPosition.x > transform.position.x && transform.localScale.x < 0) || (mouseWorldPosition.x < transform.position.x && transform.localScale.x > 0)) {
             Flip();
         }
-        Vector2 direction = (mouseWorldPosition - (Vector2)gunHolderPivot.position).normalized;
-        gunHolderPivot.right = transform.localScale.x > 0 ? direction : -direction;
 
-        //Shot
-        if (!isGrounded && Input.GetButtonDown("Fire1") && shotLeft > 0) {
-            rb.velocity = -direction * shotPower;
-            shotLeft--;
-        }
+        ShotController(mouseWorldPosition);
+        JumpController();
+    }
 
-        //Jump
-        isGrounded = Physics2D.OverlapCircle(feetPos.position, feetCheckRadius, groundMask);
+    void Flip() {
+        Vector3 Scaler = transform.localScale;
+        Scaler.x *= -1;
+        transform.localScale = Scaler;
+    }
+
+    void JumpController() {
+
         if (isGrounded && Input.GetButtonDown("Jump")) {
             isJumping = true;
             shotLeft = shotMax;
@@ -76,9 +81,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Flip() {
-        Vector3 Scaler = transform.localScale;
-        Scaler.x *= -1;
-        transform.localScale = Scaler;
+    void ShotController(Vector2 mouseWorldPosition) {
+
+        Vector2 direction = (mouseWorldPosition - (Vector2)gunHolderPivot.position).normalized;
+        gunHolderPivot.right = transform.localScale.x > 0 ? direction : -direction;
+
+        if (!isGrounded && Input.GetButtonDown("Fire1") && shotLeft > 0) {
+            rb.velocity = -direction * shotPower;
+            shotLeft--;
+        }
     }
 }
