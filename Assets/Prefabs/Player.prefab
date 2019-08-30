@@ -188,6 +188,8 @@ MonoBehaviour:
   jumpTime: 0.15
   gunHolderPivot: {fileID: 8404686357758683654}
   gunMuzzle: {fileID: 5556966246984313399}
+  projectilePrefab: {fileID: 3486407352118666237, guid: 1bfb1ecd28281074b8c20df27855d410,
+    type: 3}
   shotPower: 30
   shotLeft: 1
   shotMax: 20

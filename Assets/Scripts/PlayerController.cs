@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     //Movement
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     //Shot
     public Transform gunHolderPivot;
     public Transform gunMuzzle;
+    public Projectile projectilePrefab;
     public float shotPower = 100f;
     public int shotLeft = 1;
     public int shotMax = 1;
@@ -89,6 +91,8 @@ public class PlayerController : MonoBehaviour
         if (!isGrounded && Input.GetButtonDown("Fire1") && shotLeft > 0) {
             rb.velocity = -direction * shotPower;
             shotLeft--;
+            Projectile projectile = Instantiate(projectilePrefab, gunMuzzle.position, gunMuzzle.rotation) as Projectile;
+            projectile.SetDirection(direction);
         }
     }
 }
