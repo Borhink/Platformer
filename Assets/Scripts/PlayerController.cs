@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public float shotPower = 100f;
     public int shotLeft = 1;
     public int shotMax = 1;
+    private Vector2 shotVelocity;
 
     private Rigidbody2D rb;
 
@@ -44,11 +45,20 @@ public class PlayerController : MonoBehaviour
         else if ((moveInput > 0 && rb.velocity.x < speed) || (moveInput < 0 && rb.velocity.x > -speed)) {
             rb.AddForce(Vector2.right * moveInput * airControl);
         }
+
+        if (shotVelocity.sqrMagnitude > 0) {
+            transform.Translate(shotVelocity.normalized);//To prevent player being stick to the ground on horizontal shots
+            rb.velocity = shotVelocity;
+            shotVelocity = Vector2.zero;
+        }
     }
 
     void Update() {
 
         isGrounded = Physics2D.OverlapCircle(feetPos.position, feetCheckRadius, groundMask);
+        if (isGrounded) {
+            shotLeft = shotMax;
+        }
 
         //Looking Direction
         Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -70,7 +80,6 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded && Input.GetButtonDown("Jump")) {
             isJumping = true;
-            shotLeft = shotMax;
             jumpTimeLeft = jumpTime;
             rb.AddForce(Vector3.up * jumpForce * 15);
         }
@@ -88,11 +97,12 @@ public class PlayerController : MonoBehaviour
         Vector2 direction = (mouseWorldPosition - (Vector2)gunHolderPivot.position).normalized;
         gunHolderPivot.right = transform.localScale.x > 0 ? direction : -direction;
 
-        if (!isGrounded && Input.GetButtonDown("Fire1") && shotLeft > 0) {
-            rb.velocity = -direction * shotPower;
+        if (Input.GetButtonDown("Fire1") && shotLeft > 0) {
+            shotVelocity = -direction * shotPower;
             shotLeft--;
             Projectile projectile = Instantiate(projectilePrefab, gunMuzzle.position, gunMuzzle.rotation) as Projectile;
             projectile.SetDirection(direction);
+            Debug.Log(direction);
         }
     }
 }
