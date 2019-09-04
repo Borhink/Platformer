@@ -102,7 +102,20 @@ public class PlayerController : MonoBehaviour
             shotLeft--;
             Projectile projectile = Instantiate(projectilePrefab, gunMuzzle.position, gunMuzzle.rotation) as Projectile;
             projectile.SetDirection(direction);
-            Debug.Log(direction);
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        Collider2D collider = collision.collider;
+
+        if(collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            Vector3 normal = collision.contacts[0].normal;
+
+            if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y)) {
+                shotLeft = shotMax;
+            }
         }
     }
 }

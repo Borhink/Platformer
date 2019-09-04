@@ -142,7 +142,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.56, y: 2.56}
+  m_Size: {x: 2.45, y: 2.45}
   m_EdgeRadius: 0
 --- !u!50 &1355093205658634908
 Rigidbody2D:
@@ -190,9 +190,9 @@ MonoBehaviour:
   gunMuzzle: {fileID: 5556966246984313399}
   projectilePrefab: {fileID: 3486407352118666237, guid: 1bfb1ecd28281074b8c20df27855d410,
     type: 3}
-  shotPower: 30
+  shotPower: 20
   shotLeft: 1
-  shotMax: 20
+  shotMax: 1
 --- !u!1 &2124049468500775925
 GameObject:
   m_ObjectHideFlags: 0
