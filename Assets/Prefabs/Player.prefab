@@ -127,7 +127,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1355093205658634910}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 1b019229204167946aa18d9411b49d46, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -161,7 +161,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 5
   m_Material: {fileID: 6200000, guid: 1b019229204167946aa18d9411b49d46, type: 2}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -190,7 +190,7 @@ MonoBehaviour:
   gunMuzzle: {fileID: 5556966246984313399}
   projectilePrefab: {fileID: 3486407352118666237, guid: 1bfb1ecd28281074b8c20df27855d410,
     type: 3}
-  shotPower: 20
+  shotPower: 25
   shotLeft: 1
   shotMax: 1
 --- !u!1 &2124049468500775925

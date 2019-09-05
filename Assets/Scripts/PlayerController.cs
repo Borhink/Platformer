@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private float moveInput = 0f;
     public float speed = 2f;
     public float airControl = 40f;
+    private bool canMove = true;
 
     //Jump
     public float jumpForce = 10f;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
     public int shotMax = 1;
     private Vector2 shotVelocity;
 
+
     private Rigidbody2D rb;
 
     void Start() {
@@ -39,16 +41,18 @@ public class PlayerController : MonoBehaviour
 
         //Movement
         moveInput = Input.GetAxis("Horizontal");
-        if (isGrounded) {
-            rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
-        } // We can move a bit in the air, but we can accelerate only if velocity is less than ground max speed
-        else if ((moveInput > 0 && rb.velocity.x < speed) || (moveInput < 0 && rb.velocity.x > -speed)) {
-            rb.AddForce(Vector2.right * moveInput * airControl);
+        if (canMove) {
+            if (isGrounded) {
+                rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+            } // We can move a bit in the air, but we can accelerate only if velocity is less than ground max speed
+            else if ((moveInput > 0 && rb.velocity.x < speed) || (moveInput < 0 && rb.velocity.x > -speed)) {
+                rb.AddForce(Vector2.right * moveInput * airControl);
+            }
         }
 
         if (shotVelocity.sqrMagnitude > 0) {
-            transform.Translate(shotVelocity.normalized);//To prevent player being stick to the ground on horizontal shots
             rb.velocity = shotVelocity;
+            StartCoroutine("ShortMoveDisable");
             shotVelocity = Vector2.zero;
         }
     }
@@ -68,6 +72,13 @@ public class PlayerController : MonoBehaviour
 
         ShotController(mouseWorldPosition);
         JumpController();
+    }
+
+    IEnumerator ShortMoveDisable()
+    {
+        canMove = false;
+        yield return new WaitForSeconds(0.15f);
+        canMove = true;
     }
 
     void Flip() {
@@ -98,6 +109,7 @@ public class PlayerController : MonoBehaviour
         gunHolderPivot.right = transform.localScale.x > 0 ? direction : -direction;
 
         if (Input.GetButtonDown("Fire1") && shotLeft > 0) {
+            // rb.simulated
             shotVelocity = -direction * shotPower;
             shotLeft--;
             Projectile projectile = Instantiate(projectilePrefab, gunMuzzle.position, gunMuzzle.rotation) as Projectile;
