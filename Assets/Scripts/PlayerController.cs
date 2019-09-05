@@ -2,39 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Player))]
 public class PlayerController : MonoBehaviour
 {
-    //Movement
-    private float moveInput = 0f;
-    public float speed = 2f;
-    public float airControl = 40f;
-    private bool canMove = true;
-
-    //Jump
-    public float jumpForce = 10f;
-    private bool isGrounded = false;
-    public Transform feetPos;
-    public float feetCheckRadius = .3f;
-    public LayerMask groundMask;
-    private float jumpTimeLeft = 0f;
-    public float jumpTime = 0.3f;
-    private bool isJumping = false;
-
-    //Shot
-    public Transform gunHolderPivot;
-    public Transform gunMuzzle;
-    public Projectile projectilePrefab;
-    public float shotPower = 100f;
-    public int shotLeft = 1;
-    public int shotMax = 1;
-    private Vector2 shotVelocity;
+    private Player _player;
 
 
-    private Rigidbody2D rb;
-
-    void Start() {
-        rb = GetComponent<Rigidbody2D>();
+    void Start()
+    {
+		_player = GetComponent<Player>();
     }
 
     void FixedUpdate() {
