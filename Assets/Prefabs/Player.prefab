@@ -191,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 7.5
   _airControl: 40
-  _jumpForce: 10
+  _jumpForce: 40
   _jumpTime: 0.3
   _gun: {fileID: 8127313986876512601}
   _armPivot: {fileID: 8404686357758683654}

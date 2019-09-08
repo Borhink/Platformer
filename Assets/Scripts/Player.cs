@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
 	//Movement
 	[SerializeField] private float _speed = 2f;
 	[SerializeField] private float _airControl = 40f;
-	private float _moveInput = 0f;
 	private bool _isGrounded = false;
 	private bool _isOnWall = false;
 
@@ -50,10 +49,18 @@ public class Player : MonoBehaviour
                                             ref _horizontalRaySpacing, ref _verticalRaySpacing);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         PhysicTools.UpdateRaycastOrigins(_boxCol.bounds, _skinWidth, ref _raycastOrigins);
         _isGrounded = PhysicTools.GroundCheck(_skinWidth, _verticalRayCount, _raycastOrigins.bottomLeft, _verticalRaySpacing, _groundMask);
+
+        if (_isJumping)
+        {
+            if (_isGrounded || _jumpTimeLeft <= 0)
+                StopJump();
+            else
+                Jump();
+        }
     }
 
     public void Target(Vector2 target)
@@ -65,19 +72,36 @@ public class Player : MonoBehaviour
 
     public void Move(float moveInput)
     {
-        if (!_isShooting) {
-            if (_isGrounded) {
+        if (!_isShooting)
+        {
+            if (_isGrounded)
                 _rb.velocity = new Vector2(moveInput * _speed, _rb.velocity.y);
-            } // We can move a bit in the air, but we can accelerate only if velocity is less than ground max speed
-            else if ((moveInput > 0 && _rb.velocity.x < _speed) || (moveInput < 0 && _rb.velocity.x > -_speed)) {
+            // We can move a bit in the air, but we can accelerate only if velocity is less than ground max speed
+            else if ((moveInput > 0 && _rb.velocity.x < _speed) || (moveInput < 0 && _rb.velocity.x > -_speed))
                 _rb.AddForce(Vector2.right * moveInput * _airControl);
-            }
         }
     }
 
-	public void Jump()
+	public void StartJump()
     {
+        if (_isGrounded)
+        {
+            _isJumping = true;
+            _isGrounded = false;
+            _jumpTimeLeft = _jumpTime;
+            _rb.AddForce(Vector3.up * _jumpForce * 15);
+        }
+    }
 
+    private void Jump()
+    {
+        _rb.AddForce(Vector3.up * _jumpForce);
+        _jumpTimeLeft -= Time.deltaTime;
+    }
+
+	public void StopJump()
+    {
+        _isJumping = false;
     }
 
     public void Shoot()

@@ -7,9 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     private Player _player;
 
-    private float _moveInput;
-
-
     void Start()
     {
 		_player = GetComponent<Player>();
@@ -22,22 +19,16 @@ public class PlayerController : MonoBehaviour
         _player.Target(target);
 
         //Movement
-        _moveInput = Input.GetAxis("Horizontal");
+        _player.Move(Input.GetAxis("Horizontal"));
+
+        //Jump
+        if (Input.GetButtonDown("Jump"))
+            _player.StartJump();
+        if (Input.GetButtonUp("Jump"))
+            _player.StopJump();
     }
 
     void FixedUpdate() {
-        _player.Move(_moveInput);
-
-        //Movement
-        // moveInput = Input.GetAxis("Horizontal");
-        // if (canMove) {
-        //     if (isGrounded) {
-        //         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
-        //     } // We can move a bit in the air, but we can accelerate only if velocity is less than ground max speed
-        //     else if ((moveInput > 0 && rb.velocity.x < speed) || (moveInput < 0 && rb.velocity.x > -speed)) {
-        //         rb.AddForce(Vector2.right * moveInput * airControl);
-        //     }
-        // }
 
         // if (shotVelocity.sqrMagnitude > 0) {
         //     rb.velocity = shotVelocity;
@@ -48,13 +39,7 @@ public class PlayerController : MonoBehaviour
 
     // void Update() {
 
-        // isGrounded = Physics2D.OverlapCircle(feetPos.position, feetCheckRadius, groundMask);
-        // if (isGrounded) {
-        //     shotLeft = shotMax;
-        // }
-
         // ShotController(mouseWorldPosition);
-        // JumpController();
     // }
 
     // IEnumerator ShortMoveDisable()
@@ -62,22 +47,6 @@ public class PlayerController : MonoBehaviour
     //     canMove = false;
     //     yield return new WaitForSeconds(0.15f);
     //     canMove = true;
-    // }
-
-    // void JumpController() {
-
-    //     if (isGrounded && Input.GetButtonDown("Jump")) {
-    //         isJumping = true;
-    //         jumpTimeLeft = jumpTime;
-    //         rb.AddForce(Vector3.up * jumpForce * 15);
-    //     }
-    //     if (Input.GetButton("Jump") && isJumping && jumpTimeLeft > 0) {
-    //         rb.AddForce(Vector3.up * jumpForce);
-    //         jumpTimeLeft -= Time.deltaTime;
-    //     }
-    //     if (Input.GetButtonUp("Jump") || jumpTimeLeft <= 0) {
-    //         isJumping = false;
-    //     }
     // }
 
     // void ShotController(Vector2 mouseWorldPosition) {

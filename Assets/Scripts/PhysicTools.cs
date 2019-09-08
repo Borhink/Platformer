@@ -12,7 +12,7 @@ public static class PhysicTools
 
     static public bool GroundCheck(float skinWidth, int rayCount, Vector2 origin, float spacing, LayerMask groundMask)
     {
-        float rayLength = 0.1f + skinWidth;
+        float rayLength = 0.01f + skinWidth;
 
         for (int i = 0; i < rayCount; i++)
         {
