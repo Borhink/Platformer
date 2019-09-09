@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private Transform _armPivot;
 	[SerializeField] private Transform _gunHolder;
     private Vector2 _target;
-	private bool _isShooting = false;
+	private bool _isFiring = false;
 
     [SerializeField] private float _skinWidth = 0.015f;
     private PhysicTools.RayCastOrigins _raycastOrigins;
@@ -68,11 +68,14 @@ public class Player : MonoBehaviour
         _target = target;
         if ((_target.x > transform.position.x && transform.localScale.x < 0) || (_target.x < transform.position.x && transform.localScale.x > 0))
             Flip();
-    }
+
+		Vector2 directionToTarget = (_target - (Vector2)_armPivot.position).normalized;
+		_armPivot.right = transform.localScale.x > 0 ? directionToTarget : -directionToTarget;
+	}
 
     public void Move(float moveInput)
     {
-        if (!_isShooting)
+        if (!_isFiring)
         {
             if (_isGrounded)
                 _rb.velocity = new Vector2(moveInput * _speed, _rb.velocity.y);
@@ -104,12 +107,14 @@ public class Player : MonoBehaviour
         _isJumping = false;
     }
 
-    public void Shoot()
+    public void Fire()
     {
         if (_gun)
         {
-
-        }
+			Vector2 direction = (_target - (Vector2)_armPivot.position).normalized;
+			Vector2 shotVelocity = Vector2.zero;
+            _gun.Fire(direction, ref shotVelocity);
+		}
     }
 
     void Flip()

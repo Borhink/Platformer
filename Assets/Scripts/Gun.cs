@@ -9,10 +9,17 @@ public class Gun : MonoBehaviour
 	[SerializeField] private float _shotPower = 100f;
 	[SerializeField] private int _shotLeft = 1;
 	[SerializeField] private int _shotMax = 1;
-	private Vector2 _shotVelocity;
 
-    public void Shoot()
+    public bool Fire(Vector2 direction, ref Vector2 shotVelocity)
     {
+		if (_shotLeft < 0)
+			return false;
 
+		shotVelocity = -direction * _shotPower;
+		_shotLeft--;
+		Projectile projectile = Instantiate(_projectilePrefab, _gunMuzzle.position, _gunMuzzle.rotation) as Projectile;
+		projectile.SetDirection(direction);
+
+		return true;
     }
 }

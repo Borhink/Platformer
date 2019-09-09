@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
         //Gun
         Vector2 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _player.Target(target);
+		if (Input.GetButtonDown("Fire1"))
+            _player.Fire();
 
         //Movement
         _player.Move(Input.GetAxis("Horizontal"));
