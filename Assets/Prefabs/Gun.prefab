@@ -208,6 +208,6 @@ MonoBehaviour:
   _gunMuzzle: {fileID: 1866479746373926599}
   _projectilePrefab: {fileID: 3486407352118666237, guid: 1bfb1ecd28281074b8c20df27855d410,
     type: 3}
-  _shotPower: 100
+  _shotPower: 25
   _shotLeft: 1
   _shotMax: 1
