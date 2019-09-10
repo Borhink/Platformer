@@ -4,39 +4,28 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class Player : MonoBehaviour
+public class Player : PlatformerEntity
 {
-
 	private Rigidbody2D _rb;
-	private BoxCollider2D _boxCol;
 
-	//Movement
+	[Header("Movement")]
 	[SerializeField] private float _speed = 2f;
 	[SerializeField] private float _airControl = 40f;
 	private bool _isGrounded = false;
 	private bool _isOnWall = false;
 
-	//Jump
+	[Header("Jump")]
 	[SerializeField] private float _jumpForce = 10f;
 	[SerializeField] private float _jumpTime = 0.3f;
 	private float _jumpTimeLeft = 0f;
 	private bool _isJumping = false;
 
-	//Gun
+	[Header("Gun")]
 	[SerializeField] private Gun _gun = null;
 	[SerializeField] private Transform _armPivot = null;
 	[SerializeField] private Transform _gunHolder = null;
 	private Vector2 _target;
 	private bool _isFiring = false;
-
-	[SerializeField] private float _skinWidth = 0.05f;
-	private PhysicTools.RayCastOrigins _raycastOrigins;
-
-	[SerializeField] private int _horizontalRayCount = 3;
-	[SerializeField] private int _verticalRayCount = 3;
-	private float _horizontalRaySpacing;
-	private float _verticalRaySpacing;
-	[SerializeField] private LayerMask _groundMask;
 
 
 	void Start()
@@ -44,15 +33,13 @@ public class Player : MonoBehaviour
 		_rb = GetComponent<Rigidbody2D>();
 		_boxCol = GetComponent<BoxCollider2D>();
 
-		PhysicTools.CalculateRaySpacing(_boxCol.bounds, _skinWidth,
-											ref _horizontalRayCount, ref _verticalRayCount,
-											ref _horizontalRaySpacing, ref _verticalRaySpacing);
+		CalculateRaySpacing();
 	}
 
 	void FixedUpdate()
 	{
-		PhysicTools.UpdateRaycastOrigins(_boxCol.bounds, _skinWidth, ref _raycastOrigins);
-		_isGrounded = PhysicTools.GroundCheck(_skinWidth, _verticalRayCount, _raycastOrigins.bottomLeft, _verticalRaySpacing, _groundMask);
+		UpdateRaycastOrigins();
+		_isGrounded = GroundCheck();
 
         if (_gun && !_isFiring && _isGrounded)
 			_gun.Reload();
