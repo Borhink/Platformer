@@ -32,32 +32,25 @@ public class PlatformerEntity : MonoBehaviour
 			Debug.DrawRay(rayOrigin, Vector2.down * rayLength, Color.red);
 
 			if (hit)
-			{
-				Vector2 direction = ((Vector2)hit.collider.bounds.center - hit.point).normalized;
-				Debug.Log(direction);
-				Debug.DrawRay(hit.point, direction, Color.blue);
-				if (direction.y > 0 && Mathf.Abs(direction.y) >= Mathf.Abs(direction.x))
-					return true;
-				else
-					return false;
-			}
+				return (hit.point.y <= _boxCol.bounds.min.y + _skinWidth);
 		}
 		return false;
 	}
 
-	// protected bool WallCheck(float _skinWidth, int rayCount, Vector2 origin, float spacing, LayerMask groundMask)
+	// protected bool WallCheck()
 	// {
-	//	 float rayLength = 0.1f + _skinWidth;
+	// 	float rayLength = 0.01f + _skinWidth;
 
-	//	 for (int i = 0; i < rayCount; i++)
-	//	 {
-	//		 Vector2 rayOrigin = origin + (Vector2.up * spacing * i);
-	//		 if (Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, groundMask))
-	//		 Debug.DrawRay(rayOrigin, Vector2.down * rayLength, Color.red);
-	//		 if (hit)
-	//			 return true;
-	//	 }
-	//	 return false;
+	// 	for (int i = 0; i < _verticalRayCount; i++)
+	// 	{
+	// 		Vector2 rayOrigin = _raycastOrigins.bottomLeft + (Vector2.right * _verticalRaySpacing * i);
+	// 		RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, _groundMask);
+	// 		Debug.DrawRay(rayOrigin, Vector2.right or LEFT * rayLength, Color.red);
+
+	// 		if (hit)
+	// 			return (hit.point.y <= _boxCol.bounds.min.y + _skinWidth);
+	// 	}
+	// 	return false;
 	// }
 
 	protected void UpdateRaycastOrigins()

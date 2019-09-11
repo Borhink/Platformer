@@ -189,6 +189,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e969eaa3458b8d3518b44c7a72038a7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _skinWidth: 0.1
+  _horizontalRayCount: 5
+  _verticalRayCount: 5
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 256
   _speed: 7.5
   _airControl: 40
   _jumpForce: 40
@@ -196,12 +202,6 @@ MonoBehaviour:
   _gun: {fileID: 8127313986876512601}
   _armPivot: {fileID: 8404686357758683654}
   _gunHolder: {fileID: 8538726985176641286}
-  _skinWidth: 0.015
-  _horizontalRayCount: 5
-  _verticalRayCount: 5
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!1 &2124049468500775925
 GameObject:
   m_ObjectHideFlags: 0
