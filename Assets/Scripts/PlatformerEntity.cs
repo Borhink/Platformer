@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformerEntity : MonoBehaviour
+public class PhysicEntity : MonoBehaviour
 {
 	public struct RayCastOrigins
 	{
@@ -11,25 +11,45 @@ public class PlatformerEntity : MonoBehaviour
 	}
 
 	[Header("Physics")]
-	[SerializeField] protected float _skinWidth = 0.015f;
+	[SerializeField] protected float _skinWidth = 0.1f;
 	[SerializeField] protected int _horizontalRayCount = 5;
 	[SerializeField] protected int _verticalRayCount = 5;
 	[SerializeField] protected LayerMask _groundMask;
 
+	protected bool _isGrounded = false;
+	protected bool _isOnWall = false;
+
 	protected BoxCollider2D _boxCol;
+	protected Rigidbody2D _rb;
 	protected RayCastOrigins _raycastOrigins;
 	protected float _horizontalRaySpacing;
 	protected float _verticalRaySpacing;
+	private float _rayLength;
+
+	protected virtual void Start()
+	{
+		_rb = GetComponent<Rigidbody2D>();
+		_boxCol = GetComponent<BoxCollider2D>();
+		_rayLength = 0.01f + _skinWidth;
+
+		CalculateRaySpacing();
+	}
+
+	protected virtual void FixedUpdate()
+	{
+		UpdateRaycastOrigins();
+		_isGrounded = GroundCheck();
+		_isOnWall = WallCheck();
+		Debug.Log(_isOnWall);
+	}
 
 	protected bool GroundCheck()
 	{
-		float rayLength = 0.01f + _skinWidth;
-
 		for (int i = 0; i < _verticalRayCount; i++)
 		{
 			Vector2 rayOrigin = _raycastOrigins.bottomLeft + (Vector2.right * _verticalRaySpacing * i);
-			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, _groundMask);
-			Debug.DrawRay(rayOrigin, Vector2.down * rayLength, Color.red);
+			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, _rayLength, _groundMask);
+			Debug.DrawRay(rayOrigin, Vector2.down * _rayLength, Color.red);
 
 			if (hit)
 				return (hit.point.y <= _boxCol.bounds.min.y + _skinWidth);
@@ -37,21 +57,31 @@ public class PlatformerEntity : MonoBehaviour
 		return false;
 	}
 
-	// protected bool WallCheck()
-	// {
-	// 	float rayLength = 0.01f + _skinWidth;
+	protected bool WallCheck()
+	{
+		for (int i = 0; i < _horizontalRayCount; i++)
+		{
+			if (_rb.velocity.x <= 0)
+			{
+				Vector2 rayOrigin = _raycastOrigins.bottomLeft + (Vector2.up * _horizontalRaySpacing * i);
+				RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.left, _rayLength, _groundMask);
+				Debug.DrawRay(rayOrigin, Vector2.left * _rayLength, Color.red);
 
-	// 	for (int i = 0; i < _verticalRayCount; i++)
-	// 	{
-	// 		Vector2 rayOrigin = _raycastOrigins.bottomLeft + (Vector2.right * _verticalRaySpacing * i);
-	// 		RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, _groundMask);
-	// 		Debug.DrawRay(rayOrigin, Vector2.right or LEFT * rayLength, Color.red);
+				if (hit)
+					return (hit.point.x <= _boxCol.bounds.min.x + _skinWidth);
+			}
+			if (_rb.velocity.x >= 0)
+			{
+				Vector2 rayOrigin = _raycastOrigins.bottomRight + (Vector2.up * _verticalRaySpacing * i);
+				RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right, _rayLength, _groundMask);
+				Debug.DrawRay(rayOrigin, Vector2.right * _rayLength, Color.red);
 
-	// 		if (hit)
-	// 			return (hit.point.y <= _boxCol.bounds.min.y + _skinWidth);
-	// 	}
-	// 	return false;
-	// }
+				if (hit)
+					return (hit.point.x >= _boxCol.bounds.max.x - _skinWidth);
+			}
+		}
+		return false;
+	}
 
 	protected void UpdateRaycastOrigins()
 	{

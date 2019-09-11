@@ -4,15 +4,12 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class Player : PlatformerEntity
+public class Player : PhysicEntity
 {
-	private Rigidbody2D _rb;
 
 	[Header("Movement")]
 	[SerializeField] private float _speed = 2f;
 	[SerializeField] private float _airControl = 40f;
-	private bool _isGrounded = false;
-	private bool _isOnWall = false;
 
 	[Header("Jump")]
 	[SerializeField] private float _jumpForce = 10f;
@@ -27,21 +24,11 @@ public class Player : PlatformerEntity
 	private Vector2 _target;
 	private bool _isFiring = false;
 
-
-	void Start()
+	protected override void FixedUpdate()
 	{
-		_rb = GetComponent<Rigidbody2D>();
-		_boxCol = GetComponent<BoxCollider2D>();
+		base.FixedUpdate();
 
-		CalculateRaySpacing();
-	}
-
-	void FixedUpdate()
-	{
-		UpdateRaycastOrigins();
-		_isGrounded = GroundCheck();
-
-        if (_gun && !_isFiring && _isGrounded)
+		if (_gun && !_isFiring && _isGrounded)
 			_gun.Reload();
 
 		if (_isJumping)
