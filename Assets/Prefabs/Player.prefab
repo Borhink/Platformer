@@ -195,6 +195,7 @@ MonoBehaviour:
   _groundMask:
     serializedVersion: 2
     m_Bits: 256
+  _wallBounciness: 3
   _speed: 7.5
   _airControl: 40
   _jumpForce: 40

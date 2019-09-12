@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
 			if (_hasShotInAir)
 			{
 				StopJump();
-				Vector2 velocity = new Vector2(direction * _wallBounciness, _rb.velocity.y / 3);
+				Vector2 velocity = new Vector2(direction * _wallBounciness, _rb.velocity.y / 4);
 				_rb.velocity = velocity;
 			}
 

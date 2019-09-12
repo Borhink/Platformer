@@ -21,9 +21,9 @@ public class PlayerController : MonoBehaviour
 			_player.Fire();
 
 		//Movement
-		float moveInput = Input.GetAxis("Horizontal");
-		if (!Mathf.Approximately(moveInput, 0f))
-			_player.Move(moveInput);
+		// float moveInput = Input.GetAxis("Horizontal");
+		// if (!Mathf.Approximately(moveInput, 0f))
+		// 	_player.Move(moveInput);
 
 		//Jump
 		if (Input.GetButtonDown("Jump"))
