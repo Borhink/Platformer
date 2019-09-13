@@ -19,16 +19,5 @@ public class PlayerController : MonoBehaviour
 		_player.Target(target);
 		if (Input.GetButtonDown("Fire1"))
 			_player.Fire();
-
-		//Movement
-		// float moveInput = Input.GetAxis("Horizontal");
-		// if (!Mathf.Approximately(moveInput, 0f))
-		// 	_player.Move(moveInput);
-
-		//Jump
-		if (Input.GetButtonDown("Jump"))
-			_player.StartJump();
-		if (Input.GetButtonUp("Jump"))
-			_player.StopJump();
 	}
 }

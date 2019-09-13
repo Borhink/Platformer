@@ -23,24 +23,12 @@ public class Player : MonoBehaviour
 	private float _rayLength;
 	private BoxCollider2D _boxCol;
 	private Rigidbody2D _rb;
+	private bool _isGrounded = false;
 
 
 	[Header("Wall")]
 	[SerializeField] private float _wallBounciness = 5f;
 	private bool _hasShotInAir = false;
-
-
-	[Header("Movement")]
-	[SerializeField] private float _speed = 2f;
-	[SerializeField] private float _airControl = 40f;
-	private bool _isGrounded = false;
-
-
-	[Header("Jump")]
-	[SerializeField] private float _jumpForce = 10f;
-	[SerializeField] private float _jumpTime = 0.3f;
-	private float _jumpTimeLeft = 0f;
-	private bool _isJumping = false;
 
 
 	[Header("Gun")]
@@ -72,12 +60,12 @@ public class Player : MonoBehaviour
 				_gun.Reload();
 		}
 
-		float direction = WallCheck();
-		if (direction != 0)
+		if (!_isGrounded)
 		{
-			if (_hasShotInAir)
+			float direction = WallCheck();
+			if (_hasShotInAir && direction != 0)
 			{
-				StopJump();
+				Debug.Log("wallJump");;
 				Vector2 velocity = new Vector2(direction * _wallBounciness, _rb.velocity.y / 4);
 				_rb.velocity = velocity;
 			}
@@ -85,54 +73,6 @@ public class Player : MonoBehaviour
 			_gun.Reload();
 			_hasShotInAir = false;
 		}
-
-		if (_isJumping)
-		{
-			if (_isGrounded || _jumpTimeLeft <= 0)
-				StopJump();
-			else
-				AddJumpForce();
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////                                  Move                                  ////////
-	////////////////////////////////////////////////////////////////////////////////////////
-	public void Move(float moveInput)
-	{
-		if (!_isFiring)
-		{
-			if (_isGrounded)
-				_rb.velocity = new Vector2(moveInput * _speed, _rb.velocity.y);
-			// We can move a bit in the air, but we can accelerate only if velocity is less than ground max speed
-			else if ((moveInput > 0 && _rb.velocity.x < _speed) || (moveInput < 0 && _rb.velocity.x > -_speed))
-				_rb.AddForce(Vector2.right * moveInput * _airControl);
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////                                  Jump                                  ////////
-	////////////////////////////////////////////////////////////////////////////////////////
-	public void StartJump()
-	{
-		if (_isGrounded)
-		{
-			_isJumping = true;
-			_isGrounded = false;
-			_jumpTimeLeft = _jumpTime;
-			_rb.AddForce(Vector3.up * _jumpForce * 15);
-		}
-	}
-
-	private void AddJumpForce()
-	{
-		_rb.AddForce(Vector3.up * _jumpForce);
-		_jumpTimeLeft -= Time.deltaTime;
-	}
-
-	public void StopJump()
-	{
-		_isJumping = false;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
