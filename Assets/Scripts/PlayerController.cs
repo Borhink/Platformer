@@ -19,5 +19,14 @@ public class PlayerController : MonoBehaviour
 		_player.Target(target);
 		if (Input.GetButtonDown("Fire1"))
 			_player.Fire();
+
+		if (Input.GetKeyDown(KeyCode.Mouse1))
+		{
+			GameManager.instance.SlowTime();
+		}
+		else if (Input.GetKeyUp(KeyCode.Mouse1))
+		{
+			GameManager.instance.RestoreTime();
+		}
 	}
 }
