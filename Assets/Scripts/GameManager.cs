@@ -13,11 +13,14 @@ public class GameManager : MonoBehaviour
 
 	public void SlowTime()
 	{
-		Time.timeScale = 0.4f;
+		Time.timeScale = 0.25f;
+		Debug.Log(Time.fixedDeltaTime);
+		Time.fixedDeltaTime /= 4;
 	}
 
 	public void RestoreTime()
 	{
 		Time.timeScale = 1f;
+		Time.fixedDeltaTime *= 4;
 	}
 }
