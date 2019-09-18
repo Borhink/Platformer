@@ -77,12 +77,8 @@ public class Player : MonoBehaviour
 				_hasShotInAir = false;
 			}
 		}
-		_lastVelocity = _rb.velocity;
-	}
 
-	void OnCollisionEnter2D(Collision2D col)
-	{
-		_velocityBeforeCollision = _lastVelocity;
+		_lastVelocity = _rb.velocity;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -192,5 +188,10 @@ public class Player : MonoBehaviour
 
 		_horizontalRaySpacing = bounds.size.y / (_horizontalRayCount - 1);
 		_verticalRaySpacing = bounds.size.x / (_verticalRayCount - 1);
+	}
+
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		_velocityBeforeCollision = _lastVelocity;
 	}
 }

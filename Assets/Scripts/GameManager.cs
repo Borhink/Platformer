@@ -8,11 +8,9 @@ public class GameManager : MonoBehaviour
 
 	float _baseDeltaTime;
 
-
 	void Awake()
 	{
 		instance = this;
-		Debug.Log(Time.fixedDeltaTime);
 		_baseDeltaTime = Time.fixedDeltaTime;
 	}
 

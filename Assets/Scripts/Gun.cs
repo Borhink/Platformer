@@ -10,10 +10,20 @@ public class Gun : MonoBehaviour
 	[SerializeField] private int _shotLeft = 1;
 	[SerializeField] private int _shotMax = 1;
 
+	void Update()
+	{
+		//Load the shot until max or button released
+	}
+
 	public void Reload()
 	{
 		Debug.Log("Reloading");
 		_shotLeft = _shotMax;
+	}
+
+	public void LoadShot()
+	{
+		//set gun on loading
 	}
 
 	public bool Fire(Vector2 direction, ref Vector2 shotVelocity)
