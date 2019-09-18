@@ -12,6 +12,7 @@ public class Gun : MonoBehaviour
 
 	public void Reload()
 	{
+		Debug.Log("Reloading");
 		_shotLeft = _shotMax;
 	}
 

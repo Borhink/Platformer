@@ -6,21 +6,25 @@ public class GameManager : MonoBehaviour
 {
 	public static GameManager instance = null;
 
+	float _baseDeltaTime;
+
+
 	void Awake()
 	{
 		instance = this;
+		Debug.Log(Time.fixedDeltaTime);
+		_baseDeltaTime = Time.fixedDeltaTime;
 	}
 
 	public void SlowTime()
 	{
 		Time.timeScale = 0.25f;
-		Debug.Log(Time.fixedDeltaTime);
-		Time.fixedDeltaTime /= 4;
+		Time.fixedDeltaTime = Time.timeScale * _baseDeltaTime;
 	}
 
 	public void RestoreTime()
 	{
 		Time.timeScale = 1f;
-		Time.fixedDeltaTime *= 4;
+		Time.fixedDeltaTime = Time.timeScale * _baseDeltaTime;
 	}
 }

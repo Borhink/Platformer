@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
 	private BoxCollider2D _boxCol;
 	private Rigidbody2D _rb;
 	private bool _isGrounded = false;
+	private Vector2 _lastVelocity = Vector2.zero;
+	private Vector2 _velocityBeforeCollision = Vector2.zero;
 
 
 	[Header("Wall")]
@@ -42,7 +44,7 @@ public class Player : MonoBehaviour
 	{
 		_rb = GetComponent<Rigidbody2D>();
 		_boxCol = GetComponent<BoxCollider2D>();
-		_rayLength = 0.01f + _skinWidth;
+		_rayLength = 0.02f + _skinWidth;
 
 		CalculateRaySpacing();
 	}
@@ -65,14 +67,22 @@ public class Player : MonoBehaviour
 			float direction = WallCheck();
 			if (_hasShotInAir && direction != 0)
 			{
-				Debug.Log("wallJump");;
-				Vector2 velocity = new Vector2(direction * _wallBounciness, _rb.velocity.y / 4);
-				_rb.velocity = velocity;
+				if (Mathf.Abs(_velocityBeforeCollision.x) > 4f)
+				{
+					Vector2 velocity = new Vector2(direction * _wallBounciness, _rb.velocity.y / 4);
+					_rb.velocity = velocity;
+					_velocityBeforeCollision = Vector2.zero;
+				}
+				_gun.Reload();
+				_hasShotInAir = false;
 			}
-
-			_gun.Reload();
-			_hasShotInAir = false;
 		}
+		_lastVelocity = _rb.velocity;
+	}
+
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		_velocityBeforeCollision = _lastVelocity;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +147,7 @@ public class Player : MonoBehaviour
 
 	float WallCheck()
 	{
-		for (int i = 0; i < _horizontalRayCount - 1; i++)
+		for (int i = 1; i < _horizontalRayCount - 1; i++)
 		{
 			if (_rb.velocity.x <= 0)
 			{
