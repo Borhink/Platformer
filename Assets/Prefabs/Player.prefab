@@ -189,12 +189,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e969eaa3458b8d3518b44c7a72038a7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skinWidth: 0.1
-  _horizontalRayCount: 5
-  _verticalRayCount: 5
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 256
   _wallBounciness: 5
   _gun: {fileID: 8127313986876512601}
   _armPivot: {fileID: 8404686357758683654}
@@ -487,21 +481,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2608528862414851497, guid: 5e2455d1d3e947743b39db4dcfd94178,
-        type: 3}
-      propertyPath: _shotPower
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2608528862414851497, guid: 5e2455d1d3e947743b39db4dcfd94178,
-        type: 3}
-      propertyPath: _shotLeft
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2608528862414851497, guid: 5e2455d1d3e947743b39db4dcfd94178,
-        type: 3}
-      propertyPath: _shotMax
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e2455d1d3e947743b39db4dcfd94178, type: 3}
