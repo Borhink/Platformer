@@ -23,12 +23,32 @@ public class Player : MonoBehaviour
 	[SerializeField] private Transform _gunHolder = null;
 	private Vector2 _target;
 	private bool _isFiring = false;
+	private bool _isLoadingShot = false;
+	private float _loadTimer = 0f;
+    delegate void FiringEvent();
+    FiringEvent _firing;
 
 	void Start()
 	{
 		_rb = GetComponent<Rigidbody2D>();
 		_boxCol = GetComponent<BoxCollider2D>();
+
+        _firing = Fire;
 	}
+
+    void Update()
+    {
+        if (_isLoadingShot)
+        {
+            _loadTimer -= Time.deltaTime;
+
+            if (_loadTimer <= 0)
+            {
+                _isLoadingShot = false;
+                _firing.Invoke();
+            }
+        }
+    }
 
 	void FixedUpdate()
 	{
@@ -45,7 +65,7 @@ public class Player : MonoBehaviour
 			int direction = _contactSide.OppositeWallDirection();
 			if (direction != 0)
 			{
-                _rb.velocity = new Vector2(direction * _wallBounciness, 1f);
+                _rb.velocity = new Vector2(direction * _wallBounciness, 10f);
 				_gun.Reload();
 			}
 		}
@@ -57,10 +77,19 @@ public class Player : MonoBehaviour
 	////////////////////////////////////////////////////////////////////////////////////////
 	IEnumerator FiringTimer()
 	{
-		 _isFiring = true;
-		 yield return new WaitForSeconds(0.25f);
-		 _isFiring = false;
+		_isFiring = true;
+		yield return new WaitForSeconds(0.25f);
+		_isFiring = false;
 	}
+
+    public void LoadShot()
+    {
+        if (_gun && !_isLoadingShot)
+        {
+            if (_gun.LoadShot(out _loadTimer))
+                _isLoadingShot = true;
+        }
+    }
 
 	public void Fire()
 	{
@@ -69,11 +98,9 @@ public class Player : MonoBehaviour
 			Vector2 direction = (_target - (Vector2)_armPivot.position).normalized;
 			Vector2 shotVelocity = Vector2.zero;
 
-			if (_gun.Fire(direction, ref shotVelocity))
-			{
-				_rb.velocity = shotVelocity;
-				StartCoroutine(FiringTimer());
-			}
+			_gun.Fire(direction, ref shotVelocity);
+            _rb.velocity = shotVelocity;
+            StartCoroutine(FiringTimer());
 		}
 	}
 
