@@ -26,11 +26,17 @@ public class Gun : MonoBehaviour
         return true;
 	}
 
-	public void Fire(Vector2 direction, ref Vector2 shotVelocity)
+	public void Fire(Vector2 direction, float shotLoadTimer, ref Vector2 shotVelocity)
 	{
-		shotVelocity = -direction * _shotPower;
+        float ratio = (_shotLoadTime - shotLoadTimer) / (_shotLoadTime * 2) + 0.5f;
+		shotVelocity = -direction * _shotPower * ratio;
 		_shotLeft--;
 		Projectile projectile = Instantiate(_projectilePrefab, _gunMuzzle.position, _gunMuzzle.rotation) as Projectile;
 		projectile.SetDirection(direction);
 	}
+
+    public float ShotLoadTime()
+    {
+        return _shotLoadTime;
+    }
 }

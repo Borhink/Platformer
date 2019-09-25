@@ -19,14 +19,12 @@ public class PlayerController : MonoBehaviour
 		_player.Target(target);
 		if (Input.GetButtonDown("Fire1"))
 			_player.LoadShot();
+		if (Input.GetButtonUp("Fire1"))
+			_player.Fire();
 
 		if (Input.GetKeyDown(KeyCode.Space))
-		{
 			GameManager.instance.SlowTime();
-		}
 		else if (Input.GetKeyUp(KeyCode.Space))
-		{
 			GameManager.instance.RestoreTime();
-		}
 	}
 }

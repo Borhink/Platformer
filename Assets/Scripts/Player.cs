@@ -24,9 +24,12 @@ public class Player : MonoBehaviour
 	private Vector2 _target;
 	private bool _isFiring = false;
 	private bool _isLoadingShot = false;
-	private float _loadTimer = 0f;
+	private float _shotLoadTimer = 0f;
     delegate void FiringEvent();
     FiringEvent _firing;
+
+    [Header("UI")]
+    [SerializeField] RectTransform _powerBarFill;
 
 	void Start()
 	{
@@ -40,11 +43,13 @@ public class Player : MonoBehaviour
     {
         if (_isLoadingShot)
         {
-            _loadTimer -= Time.deltaTime;
+            _shotLoadTimer -= Time.deltaTime;
 
-            if (_loadTimer <= 0)
+            float xScale = (_gun.ShotLoadTime() - _shotLoadTimer) / _gun.ShotLoadTime();
+            _powerBarFill.localScale = new Vector3(xScale, 1, 1);
+            if (_shotLoadTimer <= 0)
             {
-                _isLoadingShot = false;
+                _shotLoadTimer = 0;
                 _firing.Invoke();
             }
         }
@@ -84,21 +89,22 @@ public class Player : MonoBehaviour
 
     public void LoadShot()
     {
-        if (_gun && !_isLoadingShot)
+        if (_gun && !_isLoadingShot && _gun.LoadShot(out _shotLoadTimer))
         {
-            if (_gun.LoadShot(out _loadTimer))
-                _isLoadingShot = true;
+            _isLoadingShot = true;
         }
     }
 
 	public void Fire()
 	{
-		if (_gun && !_isFiring)
+		if (_gun && _isLoadingShot && !_isFiring)
 		{
+            _isLoadingShot = false;
+            _powerBarFill.localScale = new Vector3(0, 1, 1);
 			Vector2 direction = (_target - (Vector2)_armPivot.position).normalized;
 			Vector2 shotVelocity = Vector2.zero;
 
-			_gun.Fire(direction, ref shotVelocity);
+			_gun.Fire(direction, _shotLoadTimer, ref shotVelocity);
             _rb.velocity = shotVelocity;
             StartCoroutine(FiringTimer());
 		}
